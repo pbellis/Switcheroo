@@ -42,7 +42,7 @@ def bernoulli_g(p, x, F, memo):
             memo[x] = l + w
             return memo
         
-def strategic_player(p, F, strategy):
+def strategic_player(F, strategy):
     def strategic_next_move(x):
         Y = F(x)
         return None if len(Y) == 0 else min(Y, key=lambda y: strategy[y])  
@@ -54,7 +54,7 @@ def random_player(F):
         return None if len(Y) == 0 else sample(Y, 1)[0]
     return random_next_move
         
-def bernoulli_simulate(p, x, p1, p2):
+def simulate(p, x, p1, p2):
     T = [1, 0]
     P = [p1, p2]
     t = 0
@@ -66,9 +66,9 @@ def bernoulli_simulate(p, x, p1, p2):
             break
     return t 
 
-def bernoulli_tournement(p, x, p1, p2, rounds):
+def tournement(p, x, p1, p2, rounds):
     count = 0
     for i in range(rounds):
-        count += bernoulli_simulate(p, x, p1, p2)
+        count += simulate(p, x, p1, p2)
     return count / rounds
         

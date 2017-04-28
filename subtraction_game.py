@@ -8,7 +8,7 @@ Created on Wed Apr 26 15:28:50 2017
 from tkinter import *
 from random import random
 from functools import reduce
-import game
+from game import *
 
 def swap_subtraction_game(S, r):
     AS = {a + b for a in S for b in S}
@@ -61,7 +61,7 @@ class Tk_SubtractionBoard(Canvas):
                 while random() < p:
                     self.x = p1(self.x)
             else:
-            self.draw()
+                self.draw()
         
     def draw(self):
         self.delete(ALL)
@@ -71,16 +71,16 @@ class Tk_SubtractionBoard(Canvas):
 p = 0.1
 F = subtraction_game({1,2})
 x = 21
-bernoulli_strategy = game.bernoulli_g(p, x, F, dict())
-naive_strategy = game.g(x, F, dict())
+bernoulli_strategy = bernoulli_g(p, x, F, dict())
+naive_strategy = g(x, F, dict())
 
-p1 = game.strategic_player(0.1, F, bernoulli_strategy)
-p2 = game.strategic_player(0.1, F, naive_strategy)
+p1 = strategic_player(F, bernoulli_strategy)
+p2 = strategic_player(F, naive_strategy)
 #p2 = random_player(F)
 
-#print (bernoulli_tournement(p, x, p1, p2, 100000))
+print (tournement(p, x, p1, p2, 100000))
 
-root = Tk()
-canvas = Tk_SubtractionBoard(p, x, F, p1, p2, bernoulli_strategy, root, bg='white', width = 512, height = 512)
-root.mainloop()
+#root = Tk()
+#canvas = Tk_SubtractionBoard(p, x, F, p1, p2, bernoulli_strategy, root, bg='white', width = 512, height = 512)
+#root.mainloop()
 

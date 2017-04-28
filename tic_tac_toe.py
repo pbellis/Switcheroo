@@ -4,6 +4,7 @@ Created on Wed Apr 26 16:37:09 2017
 
 @author: patri
 """
+from game import *
 
 pow3 = [pow(3, p) for p in range(10)]    
 def basewise_bit(x, b, m):
@@ -52,18 +53,18 @@ def tic_tac_toe_end_position(d):
     
     return 0
 
-p = 0.9
+p = 0.1
 F = tic_tac_toe_game()
 x = pow3[9]
 bernoulli_strategy = bernoulli_g(p, x, F, dict())
 naive_strategy = g(x, F, dict())
 
 
-p1 = strategic_player(0.1, F, strategy)
-p2 = strategic_player(0.1, F, naive_strategy)
+p1 = strategic_player(F, bernoulli_strategy)
+p2 = strategic_player(F, naive_strategy)
 #p2 = random_player(F)
 
-print (bernoulli_tournement(p, x, p1, p2, 10000))
+print (tournement(p, x, p1, p2, 10000))
 
 
 
