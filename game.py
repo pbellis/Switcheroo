@@ -6,6 +6,7 @@ Created on Wed Apr 26 15:24:23 2017
 """
 
 from random import sample, random
+from math import log
 
 def mex(Y):
     if len(Y) == 0:
@@ -41,11 +42,21 @@ def bernoulli_g(p, x, F, memo):
             w = c * p
             memo[x] = l + w
             return memo
+
+def strategic_entropy(x, F, strategy):
+    decisions = [strategy[y] for y in F(x)]
+    total = sum(decisions)
+    entropy = 0
+    for decision in decisions:
+        p = decision / total
+        entropy -= p * log(p, len(decisions))
+    return entropy
         
-def strategic_player(F, strategy):
+def strategic_player(p, F, strategy):
+    choose = max if p > 0.5 else min
     def strategic_next_move(x):
         Y = F(x)
-        return None if len(Y) == 0 else min(Y, key=lambda y: strategy[y])  
+        return None if len(Y) == 0 else choose(Y, key=lambda y: strategy[y])  
     return strategic_next_move
 
 def random_player(F):
@@ -71,4 +82,3 @@ def tournement(p, x, p1, p2, rounds):
     for i in range(rounds):
         count += simulate(p, x, p1, p2)
     return count / rounds
-        
