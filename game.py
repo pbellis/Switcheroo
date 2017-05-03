@@ -51,12 +51,23 @@ def strategic_entropy(x, F, strategy):
         p = decision / total
         entropy -= p * log(p, len(decisions))
     return entropy
-        
+
+def naive_player(F, strategy):
+    def naive_next_move(x):
+        Y = F(x)
+        if len(Y) == 0:
+            return None
+        else:
+            return min(Y, key=lambda y: strategy[y])
+    return naive_next_move
+
 def strategic_player(p, F, strategy):
-    choose = max if p > 0.5 else min
     def strategic_next_move(x):
         Y = F(x)
-        return None if len(Y) == 0 else choose(Y, key=lambda y: strategy[y])  
+        if len(Y) == 0:
+            return None
+        else:
+            return max(Y, key=lambda y: (1 - strategy[y]) * (1 - p) + strategy[y] * p)
     return strategic_next_move
 
 def random_player(F):
@@ -65,20 +76,25 @@ def random_player(F):
         return None if len(Y) == 0 else sample(Y, 1)[0]
     return random_next_move
         
-def simulate(p, x, p1, p2):
+def simulate(p, x, p1, p2, E):
     T = [1, 0]
     P = [p1, p2]
+    
     t = 0
-    while True:
-        x = P[t](x)
+    y = P[t](x)
+    while y != None:
+        x = y
         if (random() > p) :
             t = T[t]
-        if x == None:
-            break
-    return t 
+        y = P[t](x)
 
-def tournement(p, x, p1, p2, rounds):
-    count = 0
-    for i in range(rounds):
-        count += simulate(p, x, p1, p2)
-    return count / rounds
+    if E(x):
+        return T[t]
+    else:
+        return 2 
+
+def tournement(p, x, p1, p2, r, E):
+    W = [0, 0, 0]
+    for i in range(r):
+        W[simulate(p, x, p1, p2, E)] += 1
+    return W[0] / r, W[1] / r, W[2] / r
