@@ -59,9 +59,9 @@ def in_row_game(r, n):
 if __name__ == "__main__":
     import pickle
     
-    p = 0.2
+    p = 0.1
     n = 4
-    m = 3
+    m = 4
     x = pow3[n*n]
     x += 0
     r = 1000
