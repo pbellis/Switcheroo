@@ -26,17 +26,17 @@ def g(x, F, memo):
         memo[x] = mex(r)
         return memo
     
-def bernoulli_g(p, x, F, memo):
+def bernoulli_g(p, x, F, E, memo):
     if x in memo:
         return memo
     else:
         Y = F(x)
 
         if len(Y) == 0:
-            memo[x] = 0
+            memo[x] = 0 if E(x) else 0.5
             return memo
         else:
-            r = [bernoulli_g(p, y, F, memo)[y] for y in Y]
+            r = [bernoulli_g(p, y, F, E, memo)[y] for y in Y]
             c = (max if p > 0.5 else min)(r)
             l = (1 - c) * (1 - p)
             w = c * p
@@ -60,7 +60,7 @@ def naive_player(F, strategy):
         else:
             return min(Y, key=lambda y: strategy[y])
     return naive_next_move
-
+            
 def strategic_player(p, F, strategy):
     def strategic_next_move(x):
         Y = F(x)

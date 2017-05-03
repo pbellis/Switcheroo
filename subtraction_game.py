@@ -7,8 +7,8 @@ Created on Wed Apr 26 15:28:50 2017
 
 from tkinter import *
 from random import random
-from functools import reduce
 from game import *
+from time import sleep
 
 def swap_subtraction_game(S, r):
     AS = {a + b for a in S for b in S}
@@ -34,14 +34,13 @@ def subtraction_game(S):
     return F, E
 
 class Tk_SubtractionBoard(Canvas):
-    def __init__(self, p, x, F, p1, p2, strategy, parent, **kwargs):
+    def __init__(self, p, x, F, cpu, strategy, parent, **kwargs):
         Canvas.__init__(self, parent, **kwargs)
         
         self.p = p
         self.x = x
         self.F = F
-        self.p1 = p1
-        self.p2 = p2
+        self.cpu = cpu
         self.strategy = strategy
         
         self.height = self.winfo_reqheight()
@@ -62,21 +61,28 @@ class Tk_SubtractionBoard(Canvas):
         
     def button_click(self):
         try:
-            t = int(self.input_box.get())
+            s = int(self.input_box.get())
         except:
-            t = 0
-        y = self.x - t
-        if y in F(self.x):
+            s = 0
+            
+        Y = F(x)        
+        y = self.x - s
+        
+        if y in Y:
             self.x = y
-            if len(F(self.x)) > 0 and random() > self.p:
-                self.x = p1(self.x)
-                self.draw()
-                while random() < p:
-                    self.x = p1(self.x)
-                    self.draw()
-                    
-            else:
-                self.draw()
+            self.draw()
+            if (random() > self.p):
+                self.simulate()
+    
+    def simulate(self):
+        sleep(0.05)
+        self.x = self.cpu(self.x)
+        self.draw()
+        while random() < p:
+            sleep(0.05)
+            self.x = self.cpu(self.x)
+            self.draw()
+            
                 
     def draw(self):
         self.delete(ALL)
@@ -84,14 +90,14 @@ class Tk_SubtractionBoard(Canvas):
         
 if __name__ == "__main__":
     p = 0.1
-    S = {1, 2, 3}
+    S = {1,2}
     F, E = subtraction_game(S)
     x = 21
     r = 1000
     
-    bernoulli_strategy = bernoulli_g(p, x, F, dict())
-    naive_strategy = bernoulli_g(0, x, F, dict())
-    
+    bernoulli_strategy = bernoulli_g(p, x, F, E, dict())
+    naive_strategy = bernoulli_g(0, x, F, E, dict())
+        
     p1 = strategic_player(p, F, bernoulli_strategy)
     p2 = strategic_player(0, F, naive_strategy)
     p3 = random_player(F)
@@ -110,8 +116,3 @@ if __name__ == "__main__":
     print ("p3 vs. p2", tournement(p, x, p3, p2, r, E))
     
     print ("p1 and p2", "are the same" if {p1(y) for y in bernoulli_strategy} == {p2(y) for y in bernoulli_strategy} else "are different")
-
-#root = Tk()
-#canvas = Tk_SubtractionBoard(p, x, F, p1, p2, bernoulli_strategy, root, bg='white', width = 512, height = 512)
-#root.mainloop()
-
