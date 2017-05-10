@@ -97,7 +97,7 @@ if __name__ == "__main__":
     r = 1000
     P = lambda t : 1 - exp(-t)
     
-    general_strategy = general_g((5, 0), P, F, E, dict())
+    general_strategy = general_g((21, 0), P, F, E, dict())
     bernoulli_strategy = bernoulli_g(p, x, F, E, dict())
     naive_strategy = bernoulli_g(0, x, F, E, dict())
         

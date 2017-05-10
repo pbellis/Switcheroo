@@ -50,15 +50,15 @@ def general_g(xt, P, F, E, memo):
     else:    
         x, t = xt
         Y = F(x)
-        
+                
         if len(Y) == 0:
-            memo[x] = 0 if E(x) else 0.5
+            memo[xt] = 0 if E(x) else 0.5
             return memo
         else:
             p = P(t)
-            rkes = (general_g((y, t+1), P, F, E, memo)[y] for y in Y)
-            rses = (general_g((y, 0), P, F, E, memo)[y] for y in Y)
-            memo[x] = max((rk * (1-p) + rs * p for rk, rs in zip(rkes, rses)))
+            rkes = [general_g((y, t+1), P, F, E, memo)[(y,t+1)] for y in Y]
+            rses = [general_g((y, 0), P, F, E, memo)[(y,0)] for y in Y]
+            memo[xt] = max(((1 - rk) * (1 - p) + rs * p for rk, rs in zip(rkes, rses)))
             return memo
 
 def strategic_entropy(x, F, strategy):
