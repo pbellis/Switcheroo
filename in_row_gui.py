@@ -134,10 +134,10 @@ class TK_InRowBoard(Canvas):
             self.draw()
             
 if __name__ == "__main__":
-    p, n, m = 0.9, 4, 3
+    p, n, m = 0.9, 3, 2
     x, F, E, bernoulli_strategy, _ = in_row_init(p, n, m)
     cpu = strategic_player(p, F, bernoulli_strategy)
 
     root = Tk()
-    canvas = TK_InRowBoard(p, x, n, m, F, E, cpu, True, root, bg='white', width = 512, height = 512)
+    canvas = TK_InRowBoard(p, x, n, m, F, E, cpu, False, root, bg='white', width = 512, height = 512)
     root.mainloop()

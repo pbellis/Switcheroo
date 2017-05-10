@@ -96,6 +96,8 @@ def in_row_tournement(p, n, m, r):
     print ("with p1 = strategic_player p2 = naive_player p3 = random_player")
     print ("results recorded, win rate, loss rate, tie rate")
     
+    print ("p1 vs. p1,", str(tournement(p, x, p1, p1, r, E))[1:-1])
+    
     print ("p1 vs. p2,", str(tournement(p, x, p1, p2, r, E))[1:-1])
     print ("p1 vs. p3,", str(tournement(p, x, p1, p3, r, E))[1:-1])
     
@@ -106,8 +108,8 @@ def in_row_tournement(p, n, m, r):
     print ("p3 vs. p2,", str(tournement(p, x, p3, p2, r, E))[1:-1])
                                     
 if __name__ == "__main__":
-    for p in (i / 10 for i in range(1, 10)):
+    for p in (i / 10 for i in range(9, 10)):
         n, m = 4, 3
-        in_row_tournement(p, n, m, 1000)                
+        in_row_tournement(p, n, m, 10000)                
     # very inefficient
     #print ("p1 and p2", "are the same" if {p1(y) for y in bernoulli_strategy} == {p2(y) for y in bernoulli_strategy} else "are different")

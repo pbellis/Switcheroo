@@ -25,7 +25,7 @@ def g(x, F, memo):
         r = {g(y, F, memo)[y] for y in Y}       
         memo[x] = mex(r)
         return memo
-    
+            
 def bernoulli_g(p, x, F, E, memo):
     if x in memo:
         return memo
@@ -36,11 +36,29 @@ def bernoulli_g(p, x, F, E, memo):
             memo[x] = 0 if E(x) else 0.5
             return memo
         else:
-            r = [bernoulli_g(p, y, F, E, memo)[y] for y in Y]
-            c = (max if p > 0.5 else min)(r)
-            l = (1 - c) * (1 - p)
-            w = c * p
-            memo[x] = l + w
+            r = (bernoulli_g(p, y, F, E, memo)[y] for y in Y)
+            memo[x] = max(((1 - a) * (1- p) + a * p for a in r))
+            return memo
+
+# x is state
+# P is P(t) is probability given t times since swap
+# F is follower function
+# E is End State function (if win or loss or tie)
+def general_g(xt, P, F, E, memo):
+    if xt in memo:
+        return memo
+    else:    
+        x, t = xt
+        Y = F(x)
+        
+        if len(Y) == 0:
+            memo[x] = 0 if E(x) else 0.5
+            return memo
+        else:
+            p = P(t)
+            rkes = (general_g((y, t+1), P, F, E, memo)[y] for y in Y)
+            rses = (general_g((y, 0), P, F, E, memo)[y] for y in Y)
+            memo[x] = max((rk * (1-p) + rs * p for rk, rs in zip(rkes, rses)))
             return memo
 
 def strategic_entropy(x, F, strategy):

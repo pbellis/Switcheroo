@@ -9,6 +9,7 @@ from tkinter import *
 from random import random
 from game import *
 from time import sleep
+from math import exp
 
 def swap_subtraction_game(S, r):
     AS = {a + b for a in S for b in S}
@@ -94,7 +95,9 @@ if __name__ == "__main__":
     F, E = subtraction_game(S)
     x = 21
     r = 1000
+    P = lambda t : 1 - exp(-t)
     
+    general_strategy = general_g((5, 0), P, F, E, dict())
     bernoulli_strategy = bernoulli_g(p, x, F, E, dict())
     naive_strategy = bernoulli_g(0, x, F, E, dict())
         
