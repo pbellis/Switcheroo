@@ -88,6 +88,16 @@ def strategic_player(p, F, strategy):
             return max(Y, key=lambda y: (1 - strategy[y]) * (1 - p) + strategy[y] * p)
     return strategic_next_move
 
+def general_strategic_player(P, F, strategy):
+    def strategic_next_move(x):
+        n,t = x
+        Y = F(n)
+        if len(Y) == 0:
+            return None
+        else:
+            return max(Y, key=lambda y: (1 - strategy[y,t+1]) * (1 - P(t)) + strategy[y,0] * P(t))
+    return strategic_next_move
+
 def random_player(F):
     def random_next_move(x):
         Y = F(x)
@@ -115,4 +125,37 @@ def tournement(p, x, p1, p2, r, E):
     W = [0, 0, 0]
     for i in range(r):
         W[simulate(p, x, p1, p2, E)] += 1
+    return W[0] / r, W[1] / r, W[2] / r
+
+def generalSimulate(Pr,x,p1,p2,E):
+    T = [1, 0]
+    P = [p1, p2]
+    t = 0
+    turn = 0
+    try:
+        y = P[t](x)
+    except(TypeError):
+        y = P[t]((x,turn))
+
+    while y != None:
+        x = y
+        if (random() > Pr(turn)) :
+            t = T[t]
+            turn+=1
+        else:
+            turn = 0
+        try:
+            y = P[t](x)
+        except(TypeError):
+            y = P[t]((x,turn))
+
+    if E(x):
+        return T[t]
+    else:
+        return 2 
+    
+def gen_tournement(Pr, x, p1, p2, r, E):
+    W = [0, 0, 0]
+    for i in range(r):
+        W[generalSimulate(Pr, x, p1, p2, E)] += 1
     return W[0] / r, W[1] / r, W[2] / r
